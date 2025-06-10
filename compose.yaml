@@ -13,20 +13,33 @@ services:
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
       # - ./docker/db/data:/var/lib/postgresql/data:rw
   app:
-    image: php:8.2-cli
-    container_name: symfony_app
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: mintos-app
+    restart: unless-stopped
     working_dir: /app
     volumes:
-      - ./:/app:cached
-    depends_on:
-      - database
-    environment:
-      # make sure Symfony’s DATABASE_URL matches your DB settings
-      DATABASE_URL: "postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}"
+      - ./:/app:delegated        # `:delegated` improves Linux/macOS mount perf
+    networks:
+      - mintos-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: mintos-nginx
+    restart: unless-stopped
     ports:
       - "8000:8000"
-    # use PHP’s built-in server, pointing at your public/index.php router
-    command: php -d variables_order=EGPCS -S 0.0.0.0:8000 -t public public/index.php
+    volumes:
+      - .:/app:delegated
+      - /app/vendor
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d/
+    networks:
+      - mintos-network
+
+networks:
+  mintos-network:
+    driver: bridge
 ###< doctrine/doctrine-bundle ###
 
 volumes:
