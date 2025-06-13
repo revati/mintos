@@ -42,7 +42,7 @@ class AccountTest extends TestCase
         $this->account->applyTransactionEntry($entry);
 
         // Assert
-        $this->assertSame(900, $this->account->getBalance());
+        $this->assertSame(1100, $this->account->getBalance());
     }
 
     public function testApplyTransactionEntryCredit(): void
@@ -54,7 +54,7 @@ class AccountTest extends TestCase
         $this->account->applyTransactionEntry($entry);
 
         // Assert
-        $this->assertSame(1100, $this->account->getBalance());
+        $this->assertSame(900, $this->account->getBalance());
     }
 
     public function testApplyTransactionEntryChain(): void
@@ -70,13 +70,13 @@ class AccountTest extends TestCase
                      ->applyTransactionEntry($entry3);
 
         // Assert
-        $this->assertSame(1250, $this->account->getBalance());
+        $this->assertSame(750, $this->account->getBalance());
     }
 
     public function testApplyTransactionEntryWithInsufficientFunds(): void
     {
         // Arrange
-        $entry = new TransactionEntry($this->transaction, $this->account, Type::DEBIT, 1500, 'USD');
+        $entry = new TransactionEntry($this->transaction, $this->account, Type::CREDIT, 1500, 'USD');
 
         // Assert
         $this->expectException(\InvalidArgumentException::class);

@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use App\Domain\CurrencyExchange;
 
 class AccountingTest extends KernelTestCase
 {
@@ -22,6 +23,8 @@ class AccountingTest extends KernelTestCase
     {
         self::bootKernel();
         
+        self::getContainer()->set(CurrencyExchange::class, $this->createMock(CurrencyExchange::class));
+
         $this->em = self::getContainer()->get(EntityManagerInterface::class);
         $this->accounting = self::getContainer()->get(Accounting::class);
 
@@ -65,12 +68,15 @@ class AccountingTest extends KernelTestCase
 
     public function testTransferMoney(): void
     {
+        $exchangeMock = self::getContainer()->get(CurrencyExchange::class);
+        $exchangeMock->method('convert')->willReturn(200);
+
         // Arrange
         $user = new User('test@example.com');
         $this->em->persist($user);
 
         $fromAccount = new Account($user, 'Source Account', 'USD', 1000);
-        $toAccount = new Account($user, 'Destination Account', 'USD');
+        $toAccount = new Account($user, 'Destination Account', 'USD', 1000);
         $this->em->persist($fromAccount);
         $this->em->persist($toAccount);
         $this->em->flush();
@@ -92,21 +98,7 @@ class AccountingTest extends KernelTestCase
         // Verify account balances
         $this->em->refresh($fromAccount);
         $this->em->refresh($toAccount);
-        $this->assertSame(900, $fromAccount->getBalance());
-        $this->assertSame(100, $toAccount->getBalance());
+        $this->assertSame(800, $fromAccount->getBalance());
+        $this->assertSame(1100, $toAccount->getBalance());
     }
-
-    // public function testListAccountsReturnsEmptyArrayWhenNoAccounts(): void
-    // {
-    //     // Arrange
-    //     $user = new User('test@example.com');
-    //     $this->em->persist($user);
-    //     $this->em->flush();
-
-    //     // Act
-    //     $result = $this->accounting->listAccounts($user);
-
-    //     // Assert
-    //     $this->assertEmpty($result);
-    // }
 } 

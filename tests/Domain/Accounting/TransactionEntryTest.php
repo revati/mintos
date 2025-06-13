@@ -72,7 +72,7 @@ class TransactionEntryTest extends TestCase
         );
 
         // Assert
-        $this->assertSame(-100, $entry->getRelativeAmount());
+        $this->assertSame(100, $entry->getRelativeAmount());
     }
 
     public function testGetRelativeAmountForCredit(): void
@@ -87,7 +87,7 @@ class TransactionEntryTest extends TestCase
         );
 
         // Assert
-        $this->assertSame(100, $entry->getRelativeAmount());
+        $this->assertSame(-100, $entry->getRelativeAmount());
     }
 
     public function testTransactionEntryIsAddedToTransaction(): void
@@ -143,7 +143,7 @@ class TransactionEntryTest extends TestCase
         $entry = new TransactionEntry(
             $this->transaction,
             $this->account,
-            Type::CREDIT,
+            Type::DEBIT,
             PHP_INT_MAX,
             'USD'
         );

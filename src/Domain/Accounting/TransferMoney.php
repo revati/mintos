@@ -4,15 +4,19 @@ namespace App\Domain\Accounting;
 
 use App\Domain\Accounting\TransactionEntry\Type;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Domain\CurrencyExchange;
 
 class TransferMoney
 {
     private TransactionRepository $transactionRepository;
+    private CurrencyExchange $exchange;
 
     public function __construct(
-        private readonly ManagerRegistry $registry
+        ManagerRegistry $registry,
+        CurrencyExchange $exchange
     ) {
         $this->transactionRepository = new TransactionRepository($registry);
+        $this->exchange = $exchange;
     }
 
     /**
@@ -23,28 +27,34 @@ class TransferMoney
     public function execute(Account $fromAccount, Account $toAccount, int $amount, string $currency, string $description): Transaction
     {
         $transaction = new Transaction($description, $amount, $currency);
+
+        $creditAmount = $this->exchange->convert(
+            $amount,
+            $toAccount->getCurrency(),
+            $fromAccount->getCurrency(),
+        );
         
         // Create debit entry for source account
-        $debit = new TransactionEntry(
+        $credit = new TransactionEntry(
             $transaction,
             $fromAccount,
+            Type::CREDIT,
+            $creditAmount,
+            $fromAccount->getCurrency()
+        );
+
+        $fromAccount->applyTransactionEntry($credit);
+
+        // Create credit entry for destination account
+        $debit = new TransactionEntry(
+            $transaction,
+            $toAccount,
             Type::DEBIT,
             $amount,
             $currency
         );
 
-        $fromAccount->applyTransactionEntry($debit);
-
-        // Create credit entry for destination account
-        $credit = new TransactionEntry(
-            $transaction,
-            $toAccount,
-            Type::CREDIT,
-            $amount,
-            $currency
-        );
-
-        $toAccount->applyTransactionEntry($credit);
+        $toAccount->applyTransactionEntry($debit);
 
         // Additional entries for fees etc can be added here
 

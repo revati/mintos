@@ -58,8 +58,8 @@ class TransactionEntry
     public function getRelativeAmount(): int
     {
         return match($this->type) {
-            Type::DEBIT => -$this->amount,
-            Type::CREDIT => $this->amount,
+            Type::DEBIT => $this->amount,
+            Type::CREDIT => -$this->amount,
             default => throw new \InvalidArgumentException('Invalid transaction type. Must be either "debit" or "credit".')
         };
     }

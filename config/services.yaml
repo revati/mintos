@@ -30,3 +30,15 @@ services:
 
     App\Domain\Accounting:
         public: true
+
+    App\Domain\CurrencyExchange:
+        public: true
+        shared: true
+    App\Domain\CurrencyExchange\ExchangeRateHostClient:
+        public: true
+        shared: true
+        arguments:
+            $baseUrl: '%env(EXCHANGE_RATE_URL)%'
+            $apiKey: '%env(EXCHANGE_RATE_API_KEY)%'
+            $currencies:    '%env(CURRENCIES)%'
+
