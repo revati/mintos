@@ -38,7 +38,7 @@ class TransactionTest extends TestCase
     public function testAddEntry(): void
     {
         // Arrange
-        $entry = new TransactionEntry($this->transaction, $this->account1, Type::DEBIT, 100, 'USD');
+        $entry = new TransactionEntry($this->transaction, $this->account1, $this->account2, Type::DEBIT, 100, 'USD');
 
         // Assert
         $this->assertCount(1, $this->transaction->getEntries());
@@ -48,8 +48,8 @@ class TransactionTest extends TestCase
     public function testAddMultipleEntries(): void
     {
         // Arrange
-        $entry1 = new TransactionEntry($this->transaction, $this->account1, Type::DEBIT, 100, 'USD');
-        $entry2 = new TransactionEntry($this->transaction, $this->account2, Type::CREDIT, 100, 'USD');
+        $entry1 = new TransactionEntry($this->transaction, $this->account1, $this->account2, Type::DEBIT, 100, 'USD');
+        $entry2 = new TransactionEntry($this->transaction, $this->account2, $this->account1, Type::CREDIT, 100, 'USD');
 
         // Assert
         $this->assertCount(2, $this->transaction->getEntries());
@@ -61,8 +61,8 @@ class TransactionTest extends TestCase
     {
         // Arrange
         $transaction = new Transaction('Split payment', 150, 'USD');
-        $entry1 = new TransactionEntry($transaction, $this->account1, Type::DEBIT, 100, 'USD');
-        $entry2 = new TransactionEntry($transaction, $this->account2, Type::DEBIT, 50, 'USD');
+        $entry1 = new TransactionEntry($transaction, $this->account1, $this->account2, Type::DEBIT, 100, 'USD');
+        $entry2 = new TransactionEntry($transaction, $this->account2, $this->account1, Type::DEBIT, 50, 'USD');
 
         // Assert
         $this->assertCount(2, $transaction->getEntries());
@@ -74,8 +74,8 @@ class TransactionTest extends TestCase
     {
         // Arrange
         $transaction = new Transaction('Currency exchange', 100, 'USD');
-        $entry1 = new TransactionEntry($transaction, $this->account1, Type::DEBIT, 100, 'USD');
-        $entry2 = new TransactionEntry($transaction, $this->account2, Type::CREDIT, 85, 'EUR');
+        $entry1 = new TransactionEntry($transaction, $this->account1, $this->account2, Type::DEBIT, 100, 'USD');
+        $entry2 = new TransactionEntry($transaction, $this->account2, $this->account1, Type::CREDIT, 85, 'EUR');
 
         // Assert
         $this->assertCount(2, $transaction->getEntries());
@@ -89,6 +89,7 @@ class TransactionTest extends TestCase
         $entry = new TransactionEntry(
             $this->transaction,
             $this->account1,
+            $this->account2,
             Type::DEBIT,
             100,
             'USD',
@@ -105,6 +106,7 @@ class TransactionTest extends TestCase
         $entry = new TransactionEntry(
             $this->transaction,
             $this->account1,
+            $this->account2,
             Type::DEBIT,
             100,
             'USD'

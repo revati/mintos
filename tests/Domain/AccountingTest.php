@@ -98,7 +98,7 @@ class AccountingTest extends KernelTestCase
         // Verify account balances
         $this->em->refresh($fromAccount);
         $this->em->refresh($toAccount);
-        $this->assertSame(800, $fromAccount->getBalance());
-        $this->assertSame(1100, $toAccount->getBalance());
+        $this->assertSame(1200, $fromAccount->getBalance());
+        $this->assertSame(900, $toAccount->getBalance());
     }
 } 

@@ -14,12 +14,14 @@ class AccountTest extends TestCase
 {
     private User $user;
     private Account $account;
+    private Account $counterparty;
     private Transaction $transaction;
 
     protected function setUp(): void
     {
         $this->user = new User('test@example.com');
         $this->account = new Account($this->user, 'Test Account', 'USD', 1000);
+        $this->counterparty = new Account($this->user, 'Test Account', 'USD', 1000);
         $this->transaction = new Transaction('Test transaction', 100, 'USD');
     }
 
@@ -36,19 +38,7 @@ class AccountTest extends TestCase
     public function testApplyTransactionEntryDebit(): void
     {
         // Arrange
-        $entry = new TransactionEntry($this->transaction, $this->account, Type::DEBIT, 100, 'USD');
-
-        // Act
-        $this->account->applyTransactionEntry($entry);
-
-        // Assert
-        $this->assertSame(1100, $this->account->getBalance());
-    }
-
-    public function testApplyTransactionEntryCredit(): void
-    {
-        // Arrange
-        $entry = new TransactionEntry($this->transaction, $this->account, Type::CREDIT, 100, 'USD');
+        $entry = new TransactionEntry($this->transaction, $this->account, $this->counterparty, Type::DEBIT, 100, 'USD');
 
         // Act
         $this->account->applyTransactionEntry($entry);
@@ -57,12 +47,24 @@ class AccountTest extends TestCase
         $this->assertSame(900, $this->account->getBalance());
     }
 
+    public function testApplyTransactionEntryCredit(): void
+    {
+        // Arrange
+        $entry = new TransactionEntry($this->transaction, $this->account, $this->counterparty, Type::CREDIT, 100, 'USD');
+
+        // Act
+        $this->account->applyTransactionEntry($entry);
+
+        // Assert
+        $this->assertSame(1100, $this->account->getBalance());
+    }
+
     public function testApplyTransactionEntryChain(): void
     {
         // Arrange
-        $entry1 = new TransactionEntry($this->transaction, $this->account, Type::CREDIT, 200, 'USD');
-        $entry2 = new TransactionEntry($this->transaction, $this->account, Type::DEBIT, 50, 'USD');
-        $entry3 = new TransactionEntry($this->transaction, $this->account, Type::CREDIT, 100, 'USD');
+        $entry1 = new TransactionEntry($this->transaction, $this->account, $this->counterparty, Type::CREDIT, 200, 'USD');
+        $entry2 = new TransactionEntry($this->transaction, $this->account, $this->counterparty, Type::DEBIT, 50, 'USD');
+        $entry3 = new TransactionEntry($this->transaction, $this->account, $this->counterparty, Type::CREDIT, 100, 'USD');
 
         // Act
         $this->account->applyTransactionEntry($entry1)
@@ -70,13 +72,13 @@ class AccountTest extends TestCase
                      ->applyTransactionEntry($entry3);
 
         // Assert
-        $this->assertSame(750, $this->account->getBalance());
+        $this->assertSame(1250, $this->account->getBalance());
     }
 
     public function testApplyTransactionEntryWithInsufficientFunds(): void
     {
         // Arrange
-        $entry = new TransactionEntry($this->transaction, $this->account, Type::CREDIT, 1500, 'USD');
+        $entry = new TransactionEntry($this->transaction, $this->account, $this->counterparty, Type::DEBIT, 1500, 'USD');
 
         // Assert
         $this->expectException(\InvalidArgumentException::class);
@@ -92,7 +94,7 @@ class AccountTest extends TestCase
     {
         // Arrange
         $otherAccount = new Account($this->user, 'Other Account', 'USD');
-        $entry = new TransactionEntry($this->transaction, $otherAccount, Type::CREDIT, 100, 'USD');
+        $entry = new TransactionEntry($this->transaction, $otherAccount, $this->counterparty, Type::CREDIT, 100, 'USD');
 
         // Assert
         $this->expectException(\InvalidArgumentException::class);
@@ -105,7 +107,7 @@ class AccountTest extends TestCase
     public function testApplyTransactionEntryWithWrongCurrency(): void
     {
         // Arrange
-        $entry = new TransactionEntry($this->transaction, $this->account, Type::CREDIT, 100, 'EUR');
+        $entry = new TransactionEntry($this->transaction, $this->account, $this->counterparty, Type::CREDIT, 100, 'EUR');
 
         // Assert
         $this->expectException(\InvalidArgumentException::class);

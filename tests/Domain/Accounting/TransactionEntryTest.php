@@ -14,12 +14,14 @@ class TransactionEntryTest extends TestCase
 {
     private Transaction $transaction;
     private Account $account;
+    private Account $counterparty;
     private User $user;
 
     protected function setUp(): void
     {
         $this->user = new User('test@example.com');
         $this->account = new Account($this->user, 'Test Account', 'USD', 1000);
+        $this->counterparty = new Account($this->user, 'Test Account', 'USD', 1000);
         $this->transaction = new Transaction('Test transaction', 100, 'USD');
     }
 
@@ -29,6 +31,7 @@ class TransactionEntryTest extends TestCase
         $entry = new TransactionEntry(
             $this->transaction,
             $this->account,
+            $this->counterparty,
             Type::DEBIT,
             100,
             'USD'
@@ -38,6 +41,7 @@ class TransactionEntryTest extends TestCase
         $this->assertInstanceOf(Uuid::class, $entry->getId());
         $this->assertSame($this->transaction, $entry->getTransaction());
         $this->assertSame($this->account, $entry->getAccount());
+        $this->assertSame($this->counterparty, $entry->getCounterparty());
         $this->assertSame(Type::DEBIT, $entry->getType());
         $this->assertSame('Test transaction', $entry->getDescription());
         $this->assertSame(100, $entry->getAbsoluteAmount());
@@ -50,6 +54,7 @@ class TransactionEntryTest extends TestCase
         $entry = new TransactionEntry(
             $this->transaction,
             $this->account,
+            $this->counterparty,
             Type::DEBIT,
             100,
             'USD',
@@ -66,22 +71,8 @@ class TransactionEntryTest extends TestCase
         $entry = new TransactionEntry(
             $this->transaction,
             $this->account,
+            $this->counterparty,
             Type::DEBIT,
-            100,
-            'USD'
-        );
-
-        // Assert
-        $this->assertSame(100, $entry->getRelativeAmount());
-    }
-
-    public function testGetRelativeAmountForCredit(): void
-    {
-        // Arrange
-        $entry = new TransactionEntry(
-            $this->transaction,
-            $this->account,
-            Type::CREDIT,
             100,
             'USD'
         );
@@ -90,12 +81,29 @@ class TransactionEntryTest extends TestCase
         $this->assertSame(-100, $entry->getRelativeAmount());
     }
 
+    public function testGetRelativeAmountForCredit(): void
+    {
+        // Arrange
+        $entry = new TransactionEntry(
+            $this->transaction,
+            $this->account,
+            $this->counterparty,
+            Type::CREDIT,
+            100,
+            'USD'
+        );
+
+        // Assert
+        $this->assertSame(100, $entry->getRelativeAmount());
+    }
+
     public function testTransactionEntryIsAddedToTransaction(): void
     {
         // Arrange
         $entry = new TransactionEntry(
             $this->transaction,
             $this->account,
+            $this->counterparty,
             Type::DEBIT,
             100,
             'USD'
@@ -112,6 +120,7 @@ class TransactionEntryTest extends TestCase
         $entry = new TransactionEntry(
             $this->transaction,
             $this->account,
+            $this->counterparty,
             Type::DEBIT,
             100,
             'EUR'
@@ -127,6 +136,7 @@ class TransactionEntryTest extends TestCase
         $entry = new TransactionEntry(
             $this->transaction,
             $this->account,
+            $this->counterparty,
             Type::DEBIT,
             0,
             'USD'
@@ -143,6 +153,7 @@ class TransactionEntryTest extends TestCase
         $entry = new TransactionEntry(
             $this->transaction,
             $this->account,
+            $this->counterparty,
             Type::DEBIT,
             PHP_INT_MAX,
             'USD'
@@ -150,6 +161,6 @@ class TransactionEntryTest extends TestCase
 
         // Assert
         $this->assertSame(PHP_INT_MAX, $entry->getAbsoluteAmount());
-        $this->assertSame(PHP_INT_MAX, $entry->getRelativeAmount());
+        $this->assertSame(-PHP_INT_MAX, $entry->getRelativeAmount());
     }
 } 
