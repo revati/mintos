@@ -13,13 +13,16 @@ class Accounting
 {
     private AccountRepository $accountRepository;
     private TransactionEntryRepository $transactionRepository;
+    private transferMoney $transferMoney;
 
     public function __construct(
         AccountRepository $accountRepository,
-        TransactionEntryRepository $transactionRepository
+        TransactionEntryRepository $transactionRepository,
+        transferMoney $transferMoney
     ) {
         $this->accountRepository = $accountRepository;
         $this->transactionRepository = $transactionRepository;
+        $this->transferMoney = $transferMoney;
     }
 
     /**
