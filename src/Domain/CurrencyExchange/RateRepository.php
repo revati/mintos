@@ -8,11 +8,12 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class RateRepository extends ServiceEntityRepository
 {
-    private const BASE_CURRENCY = 'USD';
+    private readonly string $baseCurrency;
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, string $baseCurrency)
     {
         parent::__construct($registry, Rate::class);
+        $this->baseCurrency = $baseCurrency;
     }
 
     public function findRate(string $from, string $to): ?float
@@ -23,11 +24,11 @@ class RateRepository extends ServiceEntityRepository
         }
 
         // If one of the currencies is USD, we can get the rate directly
-        if ($from === self::BASE_CURRENCY) {
+        if ($from === $this->baseCurrency) {
             return $this->findDirectRate($to);
         }
 
-        if ($to === self::BASE_CURRENCY) {
+        if ($to === $this->baseCurrency) {
             $rate = $this->findDirectRate($from);
             return $rate ? 1 / $rate : null;
         }
@@ -54,7 +55,7 @@ class RateRepository extends ServiceEntityRepository
             ->where('r.from = :from')
             ->andWhere('r.to = :to')
             ->andWhere('r.expiresAt > :now')
-            ->setParameter('from', self::BASE_CURRENCY)
+            ->setParameter('from', $this->baseCurrency)
             ->setParameter('to', $currency)
             ->setParameter('now', new DateTime())
             ->orderBy('r.expiresAt', 'DESC')
@@ -67,7 +68,7 @@ class RateRepository extends ServiceEntityRepository
     public function save(Rate $rate): void
     {
         // Ensure we only store rates from USD to other currencies
-        if ($rate->getFrom() !== self::BASE_CURRENCY) {
+        if ($rate->getFrom() !== $this->baseCurrency) {
             throw new \InvalidArgumentException('Only rates from USD to other currencies can be stored');
         }
 

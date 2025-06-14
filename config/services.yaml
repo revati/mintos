@@ -34,6 +34,9 @@ services:
     App\Domain\CurrencyExchange:
         public: true
         shared: true
+    App\Domain\CurrencyExchange\RateRepository:
+        arguments:
+            $baseCurrency:    '%env(BASE_CURRENCY)%'
     App\Domain\CurrencyExchange\ExchangeRateHostClient:
         public: true
         shared: true
@@ -41,4 +44,5 @@ services:
             $baseUrl: '%env(EXCHANGE_RATE_URL)%'
             $apiKey: '%env(EXCHANGE_RATE_API_KEY)%'
             $currencies:    '%env(CURRENCIES)%'
+            $baseCurrency:    '%env(BASE_CURRENCY)%'
 

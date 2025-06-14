@@ -9,6 +9,7 @@ class ExchangeRateHostClient
 
     public function __construct(
         private readonly array $currencies,
+        private readonly string $baseCurrency,
         private readonly string $baseUrl,
         private readonly string $apiKey,
         private readonly HttpClientInterface $httpClient
@@ -23,6 +24,7 @@ class ExchangeRateHostClient
      */
     public function getRates(): array
     {
+        var_dump($this->currencies);
         $response = $this->httpClient->request('GET', $this->baseUrl, [
             'query' => [
                 'access_key' => $this->apiKey,
