@@ -46,9 +46,6 @@ services:
 networks:
   mintos-network:
     driver: bridge
-###< doctrine/doctrine-bundle ###
 
 volumes:
-###> doctrine/doctrine-bundle ###
   database_data:
-###< doctrine/doctrine-bundle ###

@@ -41,8 +41,23 @@ services:
         public: true
         shared: true
         arguments:
-            $baseUrl: '%env(EXCHANGE_RATE_URL)%'
-            $apiKey: '%env(EXCHANGE_RATE_API_KEY)%'
-            $currencies:    '%env(CURRENCIES)%'
+            $baseUrl:      '%env(EXCHANGE_RATE_URL)%'
+            $apiKey:       '%env(EXCHANGE_RATE_API_KEY)%'
+            $currencies:   '%env(CURRENCIES)%'
+            $baseCurrency: '%env(BASE_CURRENCY)%'
+
+    App\Domain\CurrencyExchange\UpdateExchangeRatesHandler:
+        arguments:
+            $application: 'Symfony\Component\Console\Application'
+        tags:
+            - { name: messenger.message_handler, bus: messenger.bus.default }
+            - { name: scheduler.scheduled_task, schedule: '* * * * *', message: App\Domain\CurrencyExchange\UpdateExchangeRatesMessage }
+
+    App\Domain\CurrencyExchange\UpdateExchangeRatesCommand:
+        arguments:
+            $currencyRateTTL: '%env(CURRENCY_RATES_TTL)%'
             $baseCurrency:    '%env(BASE_CURRENCY)%'
+
+    App\Domain\Access\UserRepository:
+        public: true
 

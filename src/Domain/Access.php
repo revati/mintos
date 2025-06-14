@@ -25,4 +25,14 @@ class Access
     {
         return $this->userRepository->listUsers();
     }
+
+    /**
+     * Fetches user by id
+     * 
+     * @return User|null Returns an User object or null if not found
+     */
+    public function getUser(string $id): ?User
+    {
+        return $this->userRepository->find($id);
+    }
 } 

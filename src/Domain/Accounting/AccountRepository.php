@@ -22,7 +22,7 @@ class AccountRepository extends ServiceEntityRepository
     public function listForUser(User $user): array
     {
         return $this->findBy(
-            ['user' => $user],
+            ['user' => $user->getId()],
             ['name' => 'ASC']
         );
     }

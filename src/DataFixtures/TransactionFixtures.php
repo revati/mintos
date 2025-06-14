@@ -17,7 +17,7 @@ class TransactionFixtures extends Fixture implements DependentFixtureInterface
         $a1 = $this->getReference('acc-1', Account::class);
         $a2 = $this->getReference('acc-2', Account::class);
 
-        $t1 = new Transaction('Transfer');
+        $t1 = new Transaction('Transfer', 100, 'USD');
         $t1->addEntry(new TransactionEntry($t1, $a1, Type::DEBIT, 100, 'USD'));
         $t1->addEntry(new TransactionEntry($t1, $a2, Type::CREDIT, 100, 'USD'));
 

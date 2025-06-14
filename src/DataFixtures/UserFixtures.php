@@ -5,12 +5,9 @@ namespace App\DataFixtures;
 use App\Domain\Access\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
-    public function __construct(private UserPasswordHasherInterface $hasher){}
-
     public function load(ObjectManager $manager): void
     {
         $u1 = new User('alice','alice@example.com');
