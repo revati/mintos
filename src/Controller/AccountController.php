@@ -38,6 +38,6 @@ class AccountController extends AbstractController
         
         return $this->json([
             'accounts' => $accounts
-        ]);
+        ], 200, [], ['groups' => ['account:read']]);
     }
 } 

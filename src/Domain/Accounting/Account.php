@@ -5,25 +5,32 @@ namespace App\Domain\Accounting;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 use App\Domain\Access\User;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: AccountRepository::class)]
 #[ORM\Table(name: '`accounts`')]
 class Account
 {
     #[ORM\Id, ORM\Column(type: "uuid")]
+    #[Groups(['account:read'])]
     private Uuid $id;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['account:read'])]
     private string $name;
 
     #[ORM\Column(type: "bigint")]
+    #[Groups(['account:read'])]
     private int $balance;
 
     #[ORM\Column(length: 3)]
+    #[Groups(['account:read'])]
     private string $currency;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['account:read'])]
     private User $user;
 
     public function __construct(User $user, string $name, string $currency, int $initialBalance = 0)
@@ -39,6 +46,8 @@ class Account
     public function getName(): string { return $this->name; }
     public function getBalance(): int { return $this->balance; }
     public function getCurrency(): string { return $this->currency; }
+    #[Groups(['transactionread'])]
+    #[SerializedName('userId')]
     public function getUser(): User { return $this->user; }
 
     public function applyTransactionEntry(TransactionEntry $entry): static

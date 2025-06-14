@@ -5,24 +5,30 @@ namespace App\Domain\Accounting;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
 #[ORM\Table(name: '`transactions`')]
 class Transaction
 {
     #[ORM\Id, ORM\Column(type: "uuid")]
+    #[Groups(['transaction:read'])]
     private Uuid $id;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['tranasction:read'])]
     private string $description;
 
     #[ORM\Column(type: "bigint")]
+    #[Groups(['tranasction:read'])]
     private int $amount;
 
     #[ORM\Column(length: 3)]
+    #[Groups(['tranasction:read'])]
     private string $currency;
 
     #[ORM\Column]
+    #[Groups(['tranasction:read'])]
     private \DateTimeImmutable $createdAt;
 
     #[ORM\OneToMany(mappedBy: "transaction", targetEntity: TransactionEntry::class, cascade: ["persist"])]

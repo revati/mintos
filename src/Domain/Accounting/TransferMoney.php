@@ -38,6 +38,7 @@ class TransferMoney
         $credit = new TransactionEntry(
             $transaction,
             $fromAccount,
+            $toAccount,
             Type::CREDIT,
             $creditAmount,
             $fromAccount->getCurrency()
@@ -49,6 +50,7 @@ class TransferMoney
         $debit = new TransactionEntry(
             $transaction,
             $toAccount,
+            $fromAccount,
             Type::DEBIT,
             $amount,
             $currency
