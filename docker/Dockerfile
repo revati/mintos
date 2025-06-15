@@ -56,5 +56,5 @@ RUN chmod 0644 /etc/crontabs/root
 # 10) Expose FPM socket port
 EXPOSE 9000
 
-# 11) Launch PHP-FPM
-CMD ["php-fpm"]
+# 11) Launch start script
+CMD ["/usr/local/bin/start"]
