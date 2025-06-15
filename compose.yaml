@@ -25,6 +25,8 @@ services:
     working_dir: /app
     volumes:
       - ./:/app:delegated        # `:delegated` improves Linux/macOS mount perf
+      - ./vendor:/app/vendor:rw
+
     networks:
       - mintos-network
     depends_on:

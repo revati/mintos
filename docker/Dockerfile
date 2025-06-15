@@ -27,34 +27,26 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # 4) Set working dir
 WORKDIR /app
 
-# 5) Build-time install of PHP deps
-COPY composer.json composer.lock ./
-RUN composer install \
-    --no-dev \
-    --no-scripts \
-    --optimize-autoloader \
-    --classmap-authoritative \
-    --no-interaction
-
-# 6) Copy application code
+# 5) Copy all files first
 COPY . .
 
-# 7) Copy and set up start script
+# 6) Copy and set up start script
 COPY docker/start.sh /usr/local/bin/start
 RUN chmod +x /usr/local/bin/start
 
-# 8) Ensure www-data can write cache/logs
-RUN chown -R www-data:www-data var/
+# 7) Create and set permissions for var directory
+RUN mkdir -p var/cache var/log && \
+    chown -R www-data:www-data var/
 
-# 9) Create cron log directory and add crontab
+# 8) Create cron log directory and add crontab
 RUN mkdir -p /var/log/cron && \
     chmod 0777 /var/log/cron
 
 COPY docker/crontab /etc/crontabs/root
 RUN chmod 0644 /etc/crontabs/root
 
-# 10) Expose FPM socket port
+# 9) Expose FPM socket port
 EXPOSE 9000
 
-# 11) Launch start script
+# 10) Launch start script
 CMD ["/usr/local/bin/start"]
