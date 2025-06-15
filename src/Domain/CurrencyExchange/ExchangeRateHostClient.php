@@ -24,7 +24,6 @@ class ExchangeRateHostClient
      */
     public function getRates(): array
     {
-        var_dump($this->currencies);
         $response = $this->httpClient->request('GET', $this->baseUrl, [
             'query' => [
                 'access_key' => $this->apiKey,

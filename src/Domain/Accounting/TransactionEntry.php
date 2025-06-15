@@ -15,7 +15,7 @@ class TransactionEntry
 {
     #[ORM\Id]
     #[ORM\Column(type: "uuid")]
-    #[Groups(['transactionEntry:read'])]
+    #[Groups(['transactionEntry:read', 'transaction:read'])]
     private Uuid $id;
 
     #[ORM\ManyToOne(targetEntity: Transaction::class, inversedBy: "entries")]
@@ -31,23 +31,22 @@ class TransactionEntry
     private Account $counterparty;
 
     #[ORM\Column(type: "string", enumType: Type::class)]
-    #[Groups(['transactionEntry:read'])]
+    #[Groups(['transactionEntry:read', 'transaction:read'])]
     private Type $type;
 
     #[ORM\Column(type: "string")]
-    #[Groups(['transactionEntry:read'])]
+    #[Groups(['transactionEntry:read', 'transaction:read'])]
     private string $description;
 
     #[ORM\Column(type: "bigint")]
-    #[Groups(['transactionEntry:read'])]
     private int $amount;
 
     #[ORM\Column(length: 3)]
-    #[Groups(['transactionEntry:read'])]
+    #[Groups(['transactionEntry:read', 'transaction:read'])]
     private string $currency;
 
     #[ORM\Column]
-    #[Groups(['transactionEntry:read'])]
+    #[Groups(['transactionEntry:read', 'transaction:read'])]
     private \DateTimeImmutable $createdAt;
 
     public function __construct(
@@ -77,19 +76,21 @@ class TransactionEntry
     public function getCounterparty(): Account { return $this->counterparty; }
     public function getType(): Type { return $this->type; }
     public function getDescription(): string { return $this->description; }
+    #[Groups(['transactionEntry:read', 'transaction:read'])]
+    #[SerializedName('amount')]
     public function getAbsoluteAmount(): int { return $this->amount; }
     public function getCurrency(): string { return $this->currency; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
 
-    #[Groups(['transactionEntry:read'])]
+    #[Groups(['transactionEntry:read', 'transaction:read'])]
     #[SerializedName('transactionId')]
     public function getTransactionId(): Uuid { return $this->transaction->getId(); }
 
-    #[Groups(['transactionEntry:read'])]
+    #[Groups(['transactionEntry:read', 'transaction:read'])]
     #[SerializedName('accountId')]
     public function getAccountId(): Uuid { return $this->account->getId(); }
 
-    #[Groups(['transactionEntry:read'])]
+    #[Groups(['transactionEntry:read', 'transaction:read'])]
     #[SerializedName('counterpartyId')]
     public function getCounterpartyId(): Uuid { return $this->counterparty->getId(); }
 

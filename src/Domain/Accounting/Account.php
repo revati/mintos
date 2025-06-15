@@ -30,7 +30,6 @@ class Account
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['account:read'])]
     private User $user;
 
     public function __construct(User $user, string $name, string $currency, int $initialBalance = 0)
@@ -46,8 +45,10 @@ class Account
     public function getName(): string { return $this->name; }
     public function getBalance(): int { return $this->balance; }
     public function getCurrency(): string { return $this->currency; }
-    #[Groups(['transactionread'])]
+    #[Groups(['account:read'])]
     #[SerializedName('userId')]
+    public function getUserId(): string { return $this->getUser()->getId(); }
+
     public function getUser(): User { return $this->user; }
 
     public function applyTransactionEntry(TransactionEntry $entry): static

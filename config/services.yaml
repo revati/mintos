@@ -46,18 +46,12 @@ services:
             $currencies:   '%env(CURRENCIES)%'
             $baseCurrency: '%env(BASE_CURRENCY)%'
 
-    App\Domain\CurrencyExchange\UpdateExchangeRatesHandler:
-        arguments:
-            $application: 'Symfony\Component\Console\Application'
-        tags:
-            - { name: messenger.message_handler, bus: messenger.bus.default }
-            - { name: scheduler.scheduled_task, schedule: '* * * * *', message: App\Domain\CurrencyExchange\UpdateExchangeRatesMessage }
-
-    App\Domain\CurrencyExchange\UpdateExchangeRatesCommand:
-        arguments:
-            $currencyRateTTL: '%env(CURRENCY_RATES_TTL)%'
-            $baseCurrency:    '%env(BASE_CURRENCY)%'
-
     App\Domain\Access\UserRepository:
         public: true
+
+    App\Domain\CurrencyExchange\UpdateCurrencyRatesHandler:
+        arguments:
+            $baseCurrency: '%env(BASE_CURRENCY)%'
+            $expirationDelay: '%env(CURRENCY_RATES_TTL)%'
+            
 

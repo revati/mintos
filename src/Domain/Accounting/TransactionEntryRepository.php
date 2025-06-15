@@ -21,7 +21,7 @@ class TransactionEntryRepository extends ServiceEntityRepository
      * @param Account $account The account to find transactions for
      * @param int $limit Maximum number of transactions to return
      * @param int $offset Number of transactions to skip
-     * @return array<Transaction> Array of transactions
+     * @return array<TransactionEntry> Array of transactionEntries
      */
     public function findByAccount(Account $account, int $limit = 10, int $offset = 0): array
     {

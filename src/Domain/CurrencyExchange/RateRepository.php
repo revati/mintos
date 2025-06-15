@@ -67,13 +67,15 @@ class RateRepository extends ServiceEntityRepository
 
     public function save(Rate $rate): void
     {
+        $em = $this->getEntityManager();
+
         // Ensure we only store rates from USD to other currencies
         if ($rate->getFrom() !== $this->baseCurrency) {
             throw new \InvalidArgumentException('Only rates from USD to other currencies can be stored');
         }
 
-        $this->_em->persist($rate);
-        $this->_em->flush();
+        $em->persist($rate);
+        $em->flush();
     }
 
     public function removeExpiredRates(): void

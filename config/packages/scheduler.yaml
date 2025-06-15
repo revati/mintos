@@ -1,12 +1,3 @@
 framework:
     scheduler:
         enabled: true
-
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-
-    App\Domain\CurrencyExchange\UpdateExchangeRatesHandler:
-        tags:
-            - { name: scheduler.scheduled_task, schedule: '* * * * *', message: App\Domain\CurrencyExchange\UpdateExchangeRatesMessage } 

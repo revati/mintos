@@ -1,0 +1,148 @@
+{
+	"info": {
+		"_postman_id": "cb110d36-2b0c-427c-a99c-df887cee2b13",
+		"name": "Mintos darba intervaijas app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1760329"
+	},
+	"item": [
+		{
+			"name": "/api/users",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/users",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/accounts",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/accounts?filter[user_id]=091531c7-4d04-4f51-af33-3a402c7dd8cb",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"accounts"
+					],
+					"query": [
+						{
+							"key": "filter[user_id]",
+							"value": "091531c7-4d04-4f51-af33-3a402c7dd8cb"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/transactions",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/transactions?filter[account_id]=d6829466-9ce9-44e0-9dc3-8c8125a38424&limit=2&offset=2",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"transactions"
+					],
+					"query": [
+						{
+							"key": "filter[account_id]",
+							"value": "d6829466-9ce9-44e0-9dc3-8c8125a38424"
+						},
+						{
+							"key": "limit",
+							"value": "2"
+						},
+						{
+							"key": "offset",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/transactions/initialize",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"This is money sent\",\n    \"amount\": 105,\n    \"currency\": \"EUR\",\n    \"debit_account_id\": \"d6829466-9ce9-44e0-9dc3-8c8125a38424\",\n    \"credit_account_id\": \"55ea2df8-3008-423a-919c-7372f8125a48\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/transactions/initialize",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"transactions",
+						"initialize"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

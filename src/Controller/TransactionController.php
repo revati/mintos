@@ -47,7 +47,6 @@ class TransactionController extends AbstractController
                 'total' => $total,
                 'limit' => $limit,
                 'offset' => $offset,
-                'has_more' => ($offset + $limit) < $total
             ]
         ], 200, [], ['groups' => ['transactionEntry:read']]);
     }
@@ -74,12 +73,12 @@ class TransactionController extends AbstractController
 
         $debitAccount = $this->accounting->getAccount($dto->debitAccount);
         if (!$debitAccount) {
-            throw new NotFoundHttpException(sprintf('Account with ID %s not found', $dto->debitAccount));
+            throw new NotFoundHttpException(sprintf('Debit account with ID %s not found', $dto->debitAccount));
         }
 
         $creditAccount = $this->accounting->getAccount($dto->creditAccount);
         if (!$creditAccount) {
-            throw new NotFoundHttpException(sprintf('Counterparty account with ID %s not found', $dto->creditAccount));
+            throw new NotFoundHttpException(sprintf('Credit account with ID %s not found', $dto->creditAccount));
         }
 
         try {
@@ -93,7 +92,7 @@ class TransactionController extends AbstractController
 
             return $this->json([
                 'transaction' => $transaction
-            ], 201, [], ['groups' => ['transactionEntry:read']]);
+            ], 201, [], ['groups' => ['transaction:read']]);
         } catch (\InvalidArgumentException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }

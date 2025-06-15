@@ -11,7 +11,8 @@ RUN apk add --no-cache \
     unzip \
     bash \
     git \
-    postgresql-dev
+    postgresql-dev \
+    dcron
 
 # 2) PHP extensions
 RUN docker-php-ext-install \
@@ -45,8 +46,15 @@ RUN chmod +x /usr/local/bin/start
 # 8) Ensure www-data can write cache/logs
 RUN chown -R www-data:www-data var/
 
-# 9) Expose FPM socket port
+# 9) Create cron log directory and add crontab
+RUN mkdir -p /var/log/cron && \
+    chmod 0777 /var/log/cron
+
+COPY docker/crontab /etc/crontabs/root
+RUN chmod 0644 /etc/crontabs/root
+
+# 10) Expose FPM socket port
 EXPOSE 9000
 
-# 9) Launch PHP-FPM
+# 11) Launch PHP-FPM
 CMD ["php-fpm"]

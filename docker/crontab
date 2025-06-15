@@ -1,0 +1,1 @@
+* * * * * cd /app && php bin/console update-rates >> /var/log/cron/cron.log 2>&1 

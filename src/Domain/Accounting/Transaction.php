@@ -16,22 +16,23 @@ class Transaction
     private Uuid $id;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['tranasction:read'])]
+    #[Groups(['transaction:read'])]
     private string $description;
 
     #[ORM\Column(type: "bigint")]
-    #[Groups(['tranasction:read'])]
+    #[Groups(['transaction:read'])]
     private int $amount;
 
     #[ORM\Column(length: 3)]
-    #[Groups(['tranasction:read'])]
+    #[Groups(['transaction:read'])]
     private string $currency;
 
     #[ORM\Column]
-    #[Groups(['tranasction:read'])]
+    #[Groups(['transaction:read'])]
     private \DateTimeImmutable $createdAt;
 
     #[ORM\OneToMany(mappedBy: "transaction", targetEntity: TransactionEntry::class, cascade: ["persist"])]
+    #[Groups(['transaction:read'])]
     private $entries;
 
     public function __construct(string $description, int $amount, string $currency)

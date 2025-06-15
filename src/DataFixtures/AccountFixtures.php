@@ -15,9 +15,9 @@ class AccountFixtures extends Fixture implements DependentFixtureInterface
         $u1 = $this->getReference('user-alice', User::class);
         $u2 = $this->getReference('user-bob', User::class);
 
-        $a1 = new Account($u1,'Checking','USD');
-        $a2 = new Account($u1,'Savings','EUR');
-        $a3 = new Account($u2,'Primary','USD');
+        $a1 = new Account($u1,'Checking','USD', 1000);
+        $a2 = new Account($u1,'Savings','EUR', 1000);
+        $a3 = new Account($u2,'Primary','USD', 1000);
 
         $manager->persist($a1);
         $manager->persist($a2);

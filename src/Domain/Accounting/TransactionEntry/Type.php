@@ -4,6 +4,6 @@ namespace App\Domain\Accounting\TransactionEntry;
 
 enum Type: string
 {
-    case DEBIT = 'debit';
-    case CREDIT = 'credit';
+    case DEBIT = 'DEBIT';
+    case CREDIT = 'CREDIT';
 } 
