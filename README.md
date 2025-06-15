@@ -54,3 +54,10 @@ Import postmann collection: `./minots-app-roberts.postman_collection.json`
 I feel plenty of places i did not like best practices for symfony would sugest. I have not used it before for anly larger project and for simpler ones, it was like 8 years ago. Same goes gor PHP in general. Things that translate over from other languages an dconpcets in general i feel are decent.
 
 DI with its config in yaml seems odd for me, and it most likely is misconfigured. But it works this example.
+
+
+# Transfering money
+
+Currency rate is taken from db. There is cron job (i could not get symfony scheduler to work) that fetches newest currency rates from service. It marks rates to be valid for 5min. an be changed in env.
+
+Transfer is umbrella over multiple trandfer entries, that each can have different account credi/debit with different counterparty. Easy to add extra fee entries, if neccesary etc.
